@@ -384,7 +384,7 @@ function load() {
 		return;
 	}
 	console.log('data: '+data.length+' bytes');
-    logs=JSON.parse(data).logs;
+    logs=JSON.parse(data); //.logs;
     console.log(logs.length+' logs read');
     logs.sort(function(a,b) {return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	populateList();
