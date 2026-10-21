@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="theme-color" content="black">
+  	<title>SolidEnergy</title>
+  	<link rel="stylesheet" type="text/css" href="EnergyStyles.css">
+  	<link rel="manifest" href="manifest.json">
+  	<script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
+  	<meta name="application-name" content="SolidEnergy">
+</head>
+<body>
+<header>
+    <div id="heading">
+        <span class='grey'><button id="buttonSync" class="sync-button"></button></span>
+        <span class='red'>grid</span>
+        <span class='green'>pvA</span>
+        <span class='blue'>pvB</span>
+        <span class='yellow'>heat</span>
+        <span class='orange'>ASHP</span>
+    </div>
+</header>
+<div id='main'>
+<div id="listPanel"><ul id="list" class="logList"></ul></div>
+<div id='curtain'></div>
+<div id='graphBackground'><canvas id='background' x='0' y='0' width='100%' height='100%'></canvas></div>
+<div id='graphPanel'><canvas id='canvas' x='0' y='0' width='100%' height='100%'></canvas></div>
+<div id='buttonNew' class='round-button'></div>
+<div id="logDialog" class="dialog">
+    <div class="dialog-body">date <input type="date" id="logDate"/></div>
+    <div class='dialog-title'>ENERGY input...</div>
+    <div class="dialog-body"><input type='number' id='logGrid' min='0' max='99999'/> kWh from grid</div>
+    <div class='dialog-body'><input type='number' id='logPVa' min='0' max='99999'/> kWh pvA</div>
+    <div class="dialog-body"><input type='number' id='logPVb' min='0' max='99999'/> kWh pvB </div>
+    <div class='dialog-title'>ASHP...</div>
+    <div class='dialog-body'><input type='number' id='logYield' min='0' max='99999'/> kWh yield</div>
+    <div class="dialog-body"><input type='number' id='logCons' min='0' max='99999'/> kWh consumption</div>
+    <div class="dialog-buttons">
+	    <button id="buttonDeleteLog" class="delete-button"></button>
+      	<button id="buttonSaveLog" class="save-button"></button>
+      	<button id='buttonAddLog' class='add-button'></button>
+    </div>
+</div>
+<div id="deleteDialog" class="dialog">
+	<div class="dialog-title">Delete</div>
+	<div  id="deleteText" class="dialog-body">text</div>
+	<div class="dialog-buttons">
+        <button id="buttonDeleteConfirm" class="delete-button"></button>
+	</div>
+</div>
+<div id='messageDialog' class='dialog'>
+	<div id='message'></div>
+</div>
+</div>
+<script src="EnergyScript.js" async></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+</body>
+</html>
