@@ -25,7 +25,8 @@ var canvasL=0;
 var intervalX=0;
 var intervalY=0;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
-var latest;
+var syncDay; // latest sync
+var latest; // latest change
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
@@ -384,7 +385,7 @@ function load() {
 		return;
 	}
 	console.log('data: '+data.length+' bytes');
-    logs=JSON.parse(data); //.logs;
+    logs=JSON.parse(data);
     console.log(logs.length+' logs read');
     logs.sort(function(a,b) {return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	populateList();
@@ -432,11 +433,14 @@ async function sync() {
 		logs=body.logs;
 		message(logs.length+' logs downloaded',false);
 		save();
+		disconnect();
 	}
 	else { // local data is newer - upload to pod
 		message('no download - UPLOAD',false);
 		upload();
 	}
+	syncDay=new Date()/86400000;
+	window.localStorage.setItem('syncDay',syncDay);
 	load(); // ensure working with latest dataset
 }
 async function upload() {
@@ -444,6 +448,11 @@ async function upload() {
   	console.log("UPLOAD");
 	var fileName="drive/SolidEnergyData.json";
 	console.log(logs.length+" logs - save");
+	if(logs.length<1) {
+		message('NO DATA');
+		disconnect();
+		return;
+	}
 	var data={'logs': logs};
 	var json=JSON.stringify(data);
 	try {
@@ -455,10 +464,17 @@ async function upload() {
 		if(!response.ok) {
     		throw new Error(`Response status: ${response.status}`);
     	}
-    	console.log('backup saved, status: '+response.status);
-    	message(logs.length+' logs saved');
+    	console.log('data uploaded, status: '+response.status);
+    	message(logs.length+' logs uploaded');
+    	syncDay=new Date()/86400000;
+		window.localStorage.setItem('syncDay',syncDay);
+		disconnect();
 	}
 	catch (error) {console.error(error.message);alert(error.message);}
+}
+async function disconnect() {
+	var response=await session.logout({logoutType: 'app'});
+	console.log('logout response: ${response.status}');
 }
 // DISPLAY MESSAGE
 function message(text) {
