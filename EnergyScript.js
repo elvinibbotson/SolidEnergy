@@ -498,7 +498,14 @@ canvas=id('canvas').getContext('2d');
 background=id('background').getContext('2d');
 latest=window.localStorage.getItem('latest');
 console.log('latest change: '+latest);
+syncDay=window.localStorage.getItem('syncDay');
+console.log('latest sync: '+syncDay);
+if(!syncDay) {
+	syncDay=new Date(0)/86400000; // default to 1970
+	window.localStorage.setItem('syncDay',syncDay);
+}
 load();
+if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
